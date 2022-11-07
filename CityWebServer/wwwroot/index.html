@@ -40,12 +40,13 @@
                 <tr>
                     <th>District ID</th>
                     <th>Name</th>
-                    <th>Population | vs World*</th>
+                    <th>Population</th>
                     <th>Households (Max)</th>
 		    <th>Household Fullness</th>
                     <th>Jobs (Max)</th>
 		    <th>Job Fullness</th>
                     <th>Weekly Tourists</th>
+		    <th>Tourist Saturatation</th>
                     <th>Land Value</th>
                     <th>Pollution</th>
                 </tr>
@@ -62,6 +63,7 @@
                 <td><span data-bind="text: CurrentJobs"></span> (<span data-bind="text: AvailableJobs"></span>)</td>
 		<td><span data-bind="text: (((CurrentJobs() / AvailableJobs())) * 100).toFixed(2) + '%'"></span></td>
                 <td data-bind="text: WeeklyTouristVisits"></td>
+		<td><span data-bind="text: ((WeeklyTouristVisits() / TotalPopulationCount()) * 100).toFixed(2) + '%'"></span></td>
                 <td data-bind="text: '₡' + AverageLandValue()"></td>
                 <td data-bind="text: (Pollution() * 100).toFixed(0) + '%'"></td>
             </tr>
@@ -77,6 +79,7 @@
                     <td><span data-bind="text: GlobalDistrict.CurrentJobs"></span> (<span data-bind="text: GlobalDistrict.AvailableJobs"></span>)</td>
 		    <td><span data-bind="text: (((GlobalDistrict.CurrentJobs() / GlobalDistrict.AvailableJobs())) * 100).toFixed(2) + '%'"></span></td>
                     <td data-bind="text: GlobalDistrict.WeeklyTouristVisits"></td>
+		    <td><span data-bind="text: ((GlobalDistrict.WeeklyTouristVisits() / GlobalDistrict.TotalPopulationCount()) * 100).toFixed(2) + '%'"></span></td>
                     <td data-bind="text: '₡' + GlobalDistrict.AverageLandValue()"></td>
                     <td data-bind="text: (GlobalDistrict.Pollution() * 100).toFixed(0) + '%'"></td>
                 </tr>
