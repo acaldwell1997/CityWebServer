@@ -1,4 +1,4 @@
-function initializeChart() {
+function initializePopulationChart() {
     var c = new Highcharts.Chart({
     chart: {
             renderTo: 'chart',
@@ -24,28 +24,6 @@ function initializeChart() {
     return c;
 }
 
-function deleteUnusedSeries(chart, seriesArray)
-{
-    // seriesArray is an array that contains only the NAMES of the series that were updated this tick.
-
-    //for (var j = 0; j < chart.series.length; j++) {
-    //    var series = chart.series[j];
-    //    var isUsed = false;
-    //    for (var i = 0; i < seriesArray.length; i++) {
-    //        var usedSeriesName = seriesArray[i];
-    //        if (series.name == usedSeriesName) {
-    //            isUsed = true;
-    //        }
-    //    }
-
-    //    if (!isUsed) {
-    //        //console.log("Removing: " + chart.series[j].name);
-    //        chart.series[j].remove();
-    //        j = -1;
-    //    }
-
-    //}
-}
 
 function addOrUpdateSeries(theChart, seriesName, value, valueName)
 {
@@ -85,16 +63,34 @@ function updateChart(vm, chart)
 {
     var updatedSeries = [];
     var districts = vm.Districts();
+    var chartSeries = ['Population','Density'];
+    var seriesName;
+    var value1;
+    var value2;
+    var seriesType;
+
     for(var i = 0; i < districts.length; i++)
     {
         var district = districts[i];
         var districtName = district.DistrictName();
+	for(var j=0; j < chartSeries.length; j++){
+	if(chartSeries[j]='Population'){
+		seriesType = 'spline';
+		seriesName = districtName + " - Population";
+		value1 = district.TotalPopulationCount();
+		value2 = vm.Time();
+	} else if(chartSeries[j]='Density'){
+		seriesType = 'pie';
+		seriesName = districtName + " - Density";
+		value1 = district.TotalPopulationCount();
+		value2 = districtName;
+	}
+}
+        
 
-        var seriesName = districtName + " - Population";
-        var population = district.TotalPopulationCount();
-        addOrUpdateSeries(chart, seriesName, population, vm.Time());
+        addOrUpdateSeries(chart, seriesName, value1, value2);
+	
         updatedSeries.push(seriesName);
-        deleteUnusedSeries(chart, updatedSeries);
-    }
+     }
     chart.redraw();
 }
