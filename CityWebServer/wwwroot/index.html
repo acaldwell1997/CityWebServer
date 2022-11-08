@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Cities: Skylines - City Statistics</title>
+    <title>City Statistics</title>
     <link href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css' rel='stylesheet'>
     <style type="text/css">
         body { padding-top: 50px; }
@@ -95,20 +95,19 @@
     <script src='./knockout.mapping-latest.js'></script>
     <script src="./highcharts.js"></script>
     <script src="./script.js"></script>
-
+    <script scr="./history.js"></script>
+    
     <script type="text/javascript">
 
     var endpoint = "./CityInfo";
     var viewModel;
     var chart;
+    var chart2;
     var initialized = false;
     var lastDate;
-
-    //$.getJSON(endpoint, function (data)
-    //{
-    //    viewModel = ko.mapping.fromJS(data);
-    //});
-
+    let history = [];
+    
+    
     // Update the data once every second.
     window.setInterval(function ()
     {
@@ -125,10 +124,14 @@
                 initialized = true;
                 viewModel = ko.mapping.fromJS(data);
                 ko.applyBindings(viewModel);
-                chart = initializeChart(viewModel);
+                chart = initializePopulationChart(viewModel);
             }
         });
     }, 2000); // Every two seconds.
+
+	function appendHistoryTable(){
+		console.log(history)
+	}
     </script>
 </body>
 </html>
