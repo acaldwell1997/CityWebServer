@@ -16,7 +16,7 @@ function initializeSplineChart() {
             minPadding: .02,
             maxPadding: .02,
             title: {
-                text: 'Value',
+                text: 'Fullness Percentage',
                 margin: 5
             }
         }
@@ -98,13 +98,28 @@ function updateChart(vm, chart)
         var seriesName = districtName + " - Population";
 	var seriesName2 = districtName + " - Jobs";
 	var seriesName3 = districtName + " - Density";
+
         var population = doMath(district.CurrentHouseholds(), district.AvailableHouseholds());
 	var jobs = doMath(district.CurrentJobs(), district.AvailableJobs());
-	addOrUpdateSeries(chart, seriesName, population, vm.Time());
-	addOrUpdateSeries(chart, seriesName2, jobs, vm.Time());
+
+	var time = formatDate(vm.Time());
+
+console.log(time);
+
+	addOrUpdateSeries(chart, seriesName, population, time);
+	addOrUpdateSeries(chart, seriesName2, jobs, time);
+	
+	
+	
 	updatedSeries.push(seriesName);
     }
     chart.redraw();
+}
+
+function formatDate(t){
+	t = Date.parse(t);
+	return t;
+	
 }
 
 function doMath(v1,v2){
@@ -199,7 +214,6 @@ function sortTable(n) {
     var endpoint = "./CityInfo";
     var viewModel;
     var chart;
-    var chart2;
     var initialized = false;
     var lastDate;
     let history = [];
