@@ -2,7 +2,6 @@ function initializePopulationChart() {
     var c = new Highcharts.Chart({
     chart: {
             renderTo: 'chart',
-            defaultSeriesType: 'spline',
             events: { }
         },
         title: {
@@ -25,7 +24,7 @@ function initializePopulationChart() {
 }
 
 
-function addOrUpdateSeries(theChart, seriesName, value, valueName)
+function addOrUpdateSeries(theChart, seriesName, seriesType, value, valueName)
 {
     var series;
     var matchFound = false;
@@ -44,19 +43,33 @@ function addOrUpdateSeries(theChart, seriesName, value, valueName)
 
     if(!matchFound)
     {
+	if(seriesType = 'pie'){
+        var seriesOptions = {
+	    type: seriesType,
+            name: seriesName,
+            data: [{ name: valueName, y: value}],
+	    center: [80, 70],
+    	    size: 100,
+            showInLegend: false,
+    	    dataLabels: {
+      		enabled: false
+    	    }
+        };
+        series = theChart.addSeries(seriesOptions, false);
+	}else{
         //console.log("Adding series: " + seriesName);
         var seriesOptions = {
-            id: seriesName,
+	    type: seriesType,
             name: seriesName,
             data: [{ name: valueName, y: value}]
         };
         series = theChart.addSeries(seriesOptions, false);
-    }
-    else
-    {
+    }if (matchFound){
         var shift = series.data.length > 20;
         series.addPoint(value, true, shift);
     }
+console.log(series);
+}
 }
 
 function updateChart(vm, chart)
@@ -79,7 +92,8 @@ function updateChart(vm, chart)
 		seriesName = districtName + " - Population";
 		value1 = district.TotalPopulationCount();
 		value2 = vm.Time();
-	} else if(chartSeries[j]='Density'){
+	} 
+if(chartSeries[j]='Density'){
 		seriesType = 'pie';
 		seriesName = districtName + " - Density";
 		value1 = district.TotalPopulationCount();
@@ -88,7 +102,7 @@ function updateChart(vm, chart)
 }
         
 
-        addOrUpdateSeries(chart, seriesName, value1, value2);
+        addOrUpdateSeries(chart, seriesName, seriesType, value1, value2);
 	
         updatedSeries.push(seriesName);
      }
