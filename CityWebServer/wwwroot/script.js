@@ -1,3 +1,23 @@
+var graphChoice;
+var querySelect = document.querySelectorAll('#graphOptions div');
+var endpoint = "./CityInfo";
+var viewModel;
+var chart;
+var initialized = false;
+var lastDate;
+let history = [];
+
+for(var i = 0; i < querySelect.length; i++){
+	querySelect[i].addEventListener("click", updateGraphChoice);
+}
+
+function updateGraphChoice(e){
+	graphChoice = e.currentTarget.innerHTML;
+	chart.destroy();
+	chart = initializeSplineChart(viewModel);
+	updateChart(viewModel, chart);
+}
+
 function initializeSplineChart() {
     var c = new Highcharts.Chart({
     chart: {
@@ -18,32 +38,6 @@ function initializeSplineChart() {
             title: {
                 text: 'Fullness Percentage',
                 margin: 5
-            }
-        }
-    });
-    return c;
-}
-
-function initializePieChart() {
-    var c = new Highcharts.Chart({
-    chart: {
-            renderTo: 'chart2',
-            defaultSeriesType: 'pie',
-            events: { }
-        },
-        title: {
-            text: 'Statistics'
-        },
-        xAxis: {
-            type: 'datetime',
-            tickPixelInterval: 150
-        },
-        yAxis: {
-            minPadding: 0.2,
-            maxPadding: 0.2,
-            title: {
-                text: 'Fullness Percentage',
-                margin: 80
             }
         }
     });
@@ -90,24 +84,51 @@ function updateChart(vm, chart)
     var updatedSeries = [];
     var districts = vm.Districts();
 
+    var time = formatDate(vm.Time());
+    var seriesName;
+    var dataPoint;
+
     for(var i = 0; i < districts.length; i++)
     {
         var district = districts[i];
-	var districtName = district.DistrictName();
-	
-        var seriesName = districtName + " - Population";
-	var seriesName2 = districtName + " - Jobs";
-	var seriesName3 = districtName + " - Density";
+	seriesName = district.DistrictName();
 
-        var population = doMath(district.CurrentHouseholds(), district.AvailableHouseholds());
-	var jobs = doMath(district.CurrentJobs(), district.AvailableJobs());
+	switch(graphChoice){
+		case 'Population':
+			dataPoint = district.TotalPopulationCount();
+		break;
+		case 'Tourists':
+			dataPoint = district.WeeklyTouristVisits();
+		break;
+		case 'Households':
+			dataPoint = district.CurrentHouseholds();
+		break;
+		case 'Jobs Occupied':
+			dataPoint = district.CurrentJobs();
+		break;
+		case 'Household Vacancies':
+			dataPoint = district.AvailableHouseholds()-district.CurrentHouseholds();
+		break;
+		case 'Job Vacancies':
+			dataPoint = district.AvailableJobs()-district.CurrentJobs();
+		break;
+		case 'Household Fullness':
+			dataPoint = doMath(district.CurrentHouseholds(), district.AvailableHouseholds());
+		break;
+		case 'Job Fullness':
+			dataPoint = doMath(district.CurrentJobs(), district.AvailableJobs());
+		break;
+		case 'Job Fullness':
+			dataPoint = doMath(district.WeeklyTouristVisits(), district.TotalPopulationCount());
+		break;
+		default: 
+			dataPoint = district.TotalPopulationCount();
+	}
 
-	var time = formatDate(vm.Time());
 
-console.log(time);
-
-	addOrUpdateSeries(chart, seriesName, population, time);
-	addOrUpdateSeries(chart, seriesName2, jobs, time);
+	console.log(time);
+	seriesName = seriesName + " - " + graphChoice;
+	addOrUpdateSeries(chart, seriesName, dataPoint, time);
 	
 	
 	
@@ -211,13 +232,7 @@ function sortTable(n) {
   }
 }
 
-    var endpoint = "./CityInfo";
-    var viewModel;
-    var chart;
-    var initialized = false;
-    var lastDate;
-    let history = [];
-    
+ 
     
     // Update the data once every second.
     window.setInterval(function ()
