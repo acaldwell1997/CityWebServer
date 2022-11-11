@@ -34,21 +34,33 @@
     <div class="container">
         <h1><span data-bind="text: Name"></span>'s City Statistics</h1>
         <div id="chart"></div>
-	<input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search for names..">
+<div id="graphOptions" style="align-items:center;">	
+<div class="btn btn-default" value="Population"> Population </div> 
+<div class="btn btn-default" value="Tourists"> Tourists </div>
+<div class="btn btn-default"> Households </div>
+<div class="btn btn-default"> Jobs Occupied </div>
+<div class="btn btn-default"> Household Vacancies </div>
+<div class="btn btn-default"> Job Vacancies </div> 
+<div class="btn btn-default"> Household Fullness </div> 
+<div class="btn btn-default"> Job Fullness </div>
+<div class="btn btn-default"> Tourist Saturation </div> 
+</div>
         <table id="mainDataTable" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th onclick="sortTable(0)">Name</th>
                     <th onclick="sortTable(1)">Population</th>
-		    <th onclick="sortTable(2)">Weekly Tourists</th>
-                    <th onclick="sortTable(3)">Households (Max)</th>
-		    <th onclick="sortTable(4)">Jobs (Max)</th>
-		    <th onclick="sortTable(5)">Household Fullness</th>
-                    <th onclick="sortTable(6)">Job Fullness</th>
+		    <th onclick="sortTable(2)">Tourists</th>
+                    <th onclick="sortTable(3)">Households</th>
+		    <th onclick="sortTable(4)">Jobs</th>
+		    <th onclick="sortTable(5)">Vacant Households</th>
+                    <th onclick="sortTable(6)">Vacant Jobs</th>
+		    <th onclick="sortTable(7)">Household Fullness</th>
+                    <th onclick="sortTable(8)">Job Fullness</th>
 		    <!--<th>City Domination*</th>-->
-                    <th onclick="sortTable(7)">Tourist Saturation</th>
-                    <th onclick="sortTable(8)">Land Value</th>
-                    <th onclick="sortTable(9)">Pollution</th>
+                    <th onclick="sortTable(9)">Tourist Saturation</th>
+                    <th onclick="sortTable(10)">Land Value</th>
+                    <th onclick="sortTable(11)">Pollution</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,8 +70,10 @@
                 <td data-bind="text: DistrictName"></td>
                 <td><span data-bind="text: TotalPopulationCount"></span></td>
 		<td data-bind="text: WeeklyTouristVisits"></td>
-                <td><span data-bind="text: CurrentHouseholds"></span> (<span data-bind="text: AvailableHouseholds"></span>)</td>
-		<td><span data-bind="text: CurrentJobs"></span> (<span data-bind="text: AvailableJobs"></span>)</td>
+                <td><span data-bind="text: CurrentHouseholds"></span></td>
+		<td><span data-bind="text: CurrentJobs"></span></td>
+		<td><span data-bind="text: (AvailableHouseholds()-CurrentHouseholds()).toFixed(0)"></span></td>
+		<td><span data-bind="text: (AvailableJobs()-CurrentJobs()).toFixed(0)"></span></td>
 		<td><span data-bind="text: (((CurrentHouseholds() / AvailableHouseholds()) * 100).toFixed(2)) + '%'"></td>
 		<td><span data-bind="text: (((CurrentJobs() / AvailableJobs())) * 100).toFixed(2) + '%'"></span></td>
 		<td><span data-bind="text: ((WeeklyTouristVisits() / TotalPopulationCount()) * 100).toFixed(2) + '%'"></span></td>
@@ -71,21 +85,25 @@
             <tfoot>
                 <tr>
                     <td><strong>Total</strong></td>
-                    <td><span data-bind="text: GlobalDistrict.TotalPopulationCount"></span></td>
-                    <td><span data-bind="text: GlobalDistrict.CurrentHouseholds"></span> (<span data-bind="text: GlobalDistrict.AvailableHouseholds"></span>)</td>
-		    <td><span data-bind="text: GlobalDistrict.CurrentJobs"></span> (<span data-bind="text: GlobalDistrict.AvailableJobs"></span>)</td>
-		    <td data-bind="text: GlobalDistrict.WeeklyTouristVisits"></td>
-		    <td><span data-bind="text: (((GlobalDistrict.CurrentHouseholds() / GlobalDistrict.AvailableHouseholds())) * 100).toFixed(2) + '%'"></span></td>
-                    <td><span data-bind="text: (((GlobalDistrict.CurrentJobs() / GlobalDistrict.AvailableJobs())) * 100).toFixed(2) + '%'"></span></td>
-                    <td><span data-bind="text: ((GlobalDistrict.WeeklyTouristVisits() / GlobalDistrict.TotalPopulationCount()) * 100).toFixed(2) + '%'"></span></td>
-                    <td data-bind="text: '₡' + GlobalDistrict.AverageLandValue()"></td>
-                    <td data-bind="text: (GlobalDistrict.Pollution() * 100).toFixed(0) + '%'"></td>
+                <td><span data-bind="text: GlobalDistrict.TotalPopulationCount"></span></td>
+		<td data-bind="text: GlobalDistrict.WeeklyTouristVisits"></td>
+                <td><span data-bind="text: GlobalDistrict.CurrentHouseholds"></span></td>
+		<td><span data-bind="text: GlobalDistrict.CurrentJobs"></span></td>
+		<td><span data-bind="text: (GlobalDistrict.AvailableHouseholds()-GlobalDistrict.CurrentHouseholds()).toFixed(0)"></span></td>
+		<td><span data-bind="text: (GlobalDistrict.AvailableJobs()-GlobalDistrict.CurrentJobs()).toFixed(0)"></span></td>
+		<td><span data-bind="text: (((GlobalDistrict.CurrentHouseholds() / GlobalDistrict.AvailableHouseholds()) * 100).toFixed(2)) + '%'"></td>
+		<td><span data-bind="text: (((GlobalDistrict.CurrentJobs() / GlobalDistrict.AvailableJobs())) * 100).toFixed(2) + '%'"></span></td>
+		<td><span data-bind="text: ((GlobalDistrict.WeeklyTouristVisits() / GlobalDistrict.TotalPopulationCount()) * 100).toFixed(2) + '%'"></span></td>
+                <td data-bind="text: '₡' + GlobalDistrict.AverageLandValue()"></td>
+                <td data-bind="text: (GlobalDistrict.Pollution() * 100).toFixed(0) + '%'"></td>
                 </tr>
             </tfoot>
         </table>
     </div>
+
     <footer class="footer">
 	<div class="container">
+<input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search for names.."> <br />
 	      <p class="text-muted"> * City Domination is a comparision between the specified distict and the rest of the city.</p>	
         </div>
     </footer>
