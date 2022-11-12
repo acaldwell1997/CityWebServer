@@ -1,4 +1,5 @@
 var graphChoice = 'Default';
+var dataDisplay = 'spline';
 var querySelect = document.querySelectorAll('#graphOptions div');
 var endpoint = "./CityInfo";
 var viewModel;
@@ -13,11 +14,10 @@ for(var i = 0; i < querySelect.length; i++){
 
 function updateGraphChoice(e){
 	graphChoice = e.currentTarget.innerHTML;
-	//console.log('before delete', chart.series)
 	chart.destroy();
 	chart = initializeSplineChart(viewModel);
 	updateChart(viewModel, chart);
-	//console.log('after delete', chart.series)
+	console.log(chart);
 }
 
 function initializeSplineChart() {
@@ -28,7 +28,7 @@ t = "Statistics"
     var c = new Highcharts.Chart({
     chart: {
             renderTo: 'chart',
-            defaultSeriesType: 'spline',
+            defaultSeriesType: dataDisplay,
             events: { }
         },
         title: {
