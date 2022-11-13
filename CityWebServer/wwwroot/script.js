@@ -5,6 +5,8 @@ var querySelect2 = document.querySelectorAll('#displayOptions div');
 var endpoint = "./CityInfo";
 var viewModel;
 var chart;
+var aChart;
+var additionalCharts = [];
 var initialized = false;
 var lastDate;
 let history = [];
