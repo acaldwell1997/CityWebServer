@@ -7,6 +7,7 @@ var viewModel;
 var chart;
 var aChart;
 var additionalCharts = [];
+var populationBreakdown = [];
 var initialized = false;
 var lastDate;
 let history = [];
@@ -174,6 +175,18 @@ function updateChart(vm, chart)
 	if(graphChoice == "Default"){
 		graphChoice = 'Population';
 		pointYPopulation = district.TotalPopulationCount();
+	}
+	if(graphChoice == "PopulationBreakdown"){
+		dataDisplay = 'pie';
+		//have options for the user to choose the district theyre wanting to look at
+		//see if there is a stacked bar graph from high charts
+		//store as district object arrays to use when user selects other option
+		for(j = 0; j < districts[i].PopulationData.length; i++){
+			pointXPopulation = districts[i].PopulationData[j].name;
+			pointYPopulation = districts[i].PopulationData[j].value;
+			pieData.push({name: pointXPopulation, y: pointYPopulation});
+			pointYPopulation = pieData;
+		}
 	}
 	if(dataDisplay == "column"){
 		dataPointX = seriesName;
